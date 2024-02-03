@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Thank You, Raj!</title>
+  <style>
+    body {
+      background-color: #ffcccc; /* Soft Red Background */
+      font-family: 'Comic Sans MS', 'Comic Sans', cursive;
+      text-align: center;
+      margin: 0;
+      padding: 0;
+    }
+
+    #text-container {
+      margin-top: 50px;
+      font-size: 24px;
+    }
+
+    #audio-container {
+      margin-top: 20px;
+    }
+
+    #image-container {
+      margin-top: 20px;
+    }
+  </style>
+</head>
+<body>
+
+  <div id="text-container">
+    <p>Dear Raj,</p>
+    <p>Thank you doesn't seem enough to express my gratitude. Your unwavering support, encouragement, and genuine kindness have made a significant impact on my life.</p>
+    <p>Your willingness to lend a helping hand and your ability to make a positive difference have not gone unnoticed. I am truly grateful for the friendship we share and the moments we've experienced together.</p>
+    <p id="thankful-words"></p>
+    <p>Your generosity and compassion have touched my heart, and I want you to know how much I appreciate everything you've done for me. The world is undoubtedly a better place with individuals like you.</p>
+    <p>Thank you for being the incredible person that you are. I am blessed to have you in my life.</p>
+  </div>
+
+  <div id="audio-container">
+    <audio controls>
+      <source src="your-audio-file.mp3" type="audio/mp3">
+      Your browser does not support the audio element.
+    </audio>
+  </div>
+
+  <div id="image-container">
+    <img src="your-image-url.jpg" alt="Thank You Image" width="300">
+  </div>
+
+  <script>
+    // Text Typing Effect
+    const thankfulWords = "Grateful, Appreciative, Blessed, Thankful, Overwhelmed";
+    const wordsArray = thankfulWords.split(', ');
+
+    let index = 0;
+    function typeText() {
+      if (index < wordsArray.length) {
+        document.getElementById("thankful-words").innerHTML += wordsArray[index] + ' ';
+        index++;
+        setTimeout(typeText, 500); // Typing speed (adjust as needed)
+      }
+    }
+
+    typeText();
+  </script>
+
+</body>
+</html>
