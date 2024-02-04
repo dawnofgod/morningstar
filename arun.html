@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Love Letter to ABISHA</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Comic Sans MS', cursive;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            overflow: hidden; /* Prevents scrollbars */
+            background: linear-gradient(rgba(255, 0, 0, 0.6), rgba(255, 0, 0, 0.8));
+            animation: heartBgAnimation 5s infinite linear alternate; /* Heart animation */
+        }
+
+        @keyframes heartBgAnimation {
+            0% {
+                background-size: 100% 100%;
+            }
+            100% {
+                background-size: 110% 110%;
+            }
+        }
+
+        .love-letter {
+            text-align: center;
+            padding: 20px;
+            border-radius: 10px; /* Rounded corners for the letter */
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5); /* Shadow effect for the letter */
+            color: #fff;
+            position: relative;
+            z-index: 1; /* Places the content above the background */
+        }
+
+        .romantic-lines {
+            font-size: 24px;
+            line-height: 1.5;
+            margin-bottom: 20px;
+        }
+
+        .signature {
+            font-size: 28px;
+            font-weight: bold;
+        }
+
+        .fade-in {
+            opacity: 0;
+            animation: fadeIn 2s forwards;
+        }
+
+        @keyframes fadeIn {
+            to {
+                opacity: 1;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="love-letter" id="love-letter">
+        <p id="dearest-text" class="romantic-lines fade-in">Dearest ABISHA❤️,</p>
+        <p id="typing-text" class="romantic-lines"></p>
+        <p class="romantic-lines">
+            As I pen down these words, I want you to know that you are the beat of my heart, the twinkle in my eyes, and the love in my life.
+            Each day with you feels like a romantic adventure, and I cherish every precious moment we spend together.
+        </p>
+        <p class="signature">Yours Forever,</p>
+        <p class="signature">[ ARUN😜 ]</p>
+        <audio controls>
+            <source src="O-Lakho-Mile-Koi-Bhi-Na-Tumsa-Mila-Arijit-Singh(MrSong (mp3cut.net).mp3" type="audio/mp3">
+            Your browser does not support the audio tag.
+        </audio>
+    </div>
+
+    <script>
+        const dearestTextElement = document.getElementById('dearest-text');
+        const typingTextElement = document.getElementById('typing-text');
+
+        function typeText() {
+            const textToType = "In the garden of my heart, your name blooms like a beautiful flower, filling my days with joy and warmth. Your presence is a melody that sweetly plays in the symphony of my life, bringing harmony to every moment we share. Your smile is the sunrise that brightens even the darkest corners of my soul.";
+
+            let index = 0;
+
+            function type() {
+                if (index < textToType.length) {
+                    typingTextElement.innerHTML += textToType.charAt(index);
+                    index++;
+                    setTimeout(type, 50); // Adjust the delay between characters
+                }
+            }
+
+            type();
+        }
+
+        function startLoveLetter() {
+            typeText();
+        }
+
+        dearestTextElement.addEventListener('animationend', startLoveLetter);
+    </script>
+</body>
+</html>
