@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hologram Effect</title>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            background: #000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+        }
+
+        img {
+            width: 200px; /* Adjust the size of your image */
+            height: 200px;
+            object-fit: cover;
+            transform-style: preserve-3d;
+            animation: hologram 10s infinite linear;
+        }
+
+        @keyframes hologram {
+            0% {
+                transform: rotateY(0deg) rotateX(0deg);
+            }
+            25% {
+                transform: rotateY(90deg) rotateX(90deg);
+            }
+            50% {
+                transform: rotateY(180deg) rotateX(180deg);
+            }
+            75% {
+                transform: rotateY(270deg) rotateX(270deg);
+            }
+            100% {
+                transform: rotateY(360deg) rotateX(360deg);
+            }
+        }
+    </style>
+</head>
+<body>
+    <img src="your-image.jpg" alt="Your Image">
+</body>
+</html>
