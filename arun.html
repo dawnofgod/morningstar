@@ -12,6 +12,7 @@
             display: flex;
             align-items: center;
             justify-content: center;
+            flex-direction: column;
             height: 100vh;
             overflow: hidden; /* Prevents scrollbars */
             background: linear-gradient(rgba(255, 0, 0, 0.6), rgba(255, 0, 0, 0.8));
@@ -35,6 +36,7 @@
             color: #fff;
             position: relative;
             z-index: 1; /* Places the content above the background */
+            margin-bottom: 20px;
         }
 
         .romantic-lines {
@@ -58,22 +60,87 @@
                 opacity: 1;
             }
         }
+
+        /* Slideshow styles */
+        .slideshow-container {
+            max-width: 400px;
+            position: relative;
+            margin: auto;
+        }
+
+        .mySlides {
+            display: none;
+        }
+
+        .slideshow-img {
+            width: 100%;
+            border-radius: 10px; /* Rounded corners for the image */
+        }
+
+        /* Name input styles */
+        .name-input {
+            margin-top: 20px;
+            padding: 10px;
+            font-size: 16px;
+            border-radius: 5px;
+        }
+
+        /* Button styles */
+        .button {
+            margin-top: 10px;
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            border: none;
+            border-radius: 5px;
+            background-color: #fff;
+            color: #000;
+            transition: background-color 0.3s;
+        }
+
+        .button:hover {
+            background-color: #ccc;
+        }
     </style>
 </head>
 <body>
     <div class="love-letter" id="love-letter">
-        <p id="dearest-text" class="romantic-lines fade-in">Dearest ABISHA❤️,</p>
+        <p id="dearest-text" class="romantic-lines fade-in">Dearest ABISHA,</p>
         <p id="typing-text" class="romantic-lines"></p>
         <p class="romantic-lines">
             As I pen down these words, I want you to know that you are the beat of my heart, the twinkle in my eyes, and the love in my life.
             Each day with you feels like a romantic adventure, and I cherish every precious moment we spend together.
         </p>
         <p class="signature">Yours Forever,</p>
-        <p class="signature">[ ARUN😜 ]</p>
+        
+        <!-- Audio Element -->
         <audio controls>
-            <source src="O-Lakho-Mile-Koi-Bhi-Na-Tumsa-Mila-Arijit-Singh(MrSong (mp3cut.net).mp3" type="audio/mp3">
+            <source src="YOUR_AUDIO_FILE_URL" type="audio/mp3">
             Your browser does not support the audio tag.
         </audio>
+
+        <!-- Slideshow of Photos -->
+        <div class="slideshow-container">
+            <div class="mySlides">
+                <img class="slideshow-img" src="IMAGE_URL_1" alt="Slide 1">
+            </div>
+
+            <div class="mySlides">
+                <img class="slideshow-img" src="IMAGE_URL_2" alt="Slide 2">
+            </div>
+
+            <!-- Add more slides as needed -->
+
+            <!-- Navigation buttons for the slideshow -->
+            <button class="button" onclick="plusSlides(-1)">Previous</button>
+            <button class="button" onclick="plusSlides(1)">Next</button>
+        </div>
+
+        <!-- Name Input Section -->
+        <input type="text" class="name-input" placeholder="Your Name" id="your-name">
+        
+        <!-- Button to finalize the love letter -->
+        <button class="button" onclick="finalizeLoveLetter()">Finalize Love Letter</button>
     </div>
 
     <script>
@@ -99,6 +166,40 @@
         function startLoveLetter() {
             typeText();
         }
+
+        function finalizeLoveLetter() {
+            const yourName = document.getElementById('your-name').value;
+            alert(`Love Letter Finalized by ${yourName}!`);
+        }
+
+        // Slideshow functions
+        let slideIndex = 1;
+
+        function plusSlides(n) {
+            showSlides(slideIndex += n);
+        }
+
+        function showSlides(n) {
+            let i;
+            const slides = document.getElementsByClassName('mySlides');
+
+            if (n > slides.length) {
+                slideIndex = 1;
+            }
+
+            if (n < 1) {
+                slideIndex = slides.length;
+            }
+
+            for (i = 0; i < slides.length; i++) {
+                slides[i].style.display = 'none';
+            }
+
+            slides[slideIndex - 1].style.display = 'block';
+        }
+
+        // Initial setup
+        showSlides(slideIndex);
 
         dearestTextElement.addEventListener('animationend', startLoveLetter);
     </script>
