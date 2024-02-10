@@ -192,9 +192,7 @@
     var imgHeight = 170; // height of images (unit: px)
 
     // Link of background music - set 'null' if you dont want to play background music
-    // Link of background music - set 'null' if you dont want to play background music
-    var bgMusicURL = 'https://github.com/dawnofgod/morningstar/raw/main/Teri%20Baaton%20Mein%20Aisa%20Uljha%20Jiya(PagalWorld%20(mp3cut.net).mp3';
-
+    var bgMusicURL = 'https://github.com/dawnofgod/morningstar/blob/main/Teri%20Baaton%20Mein%20Aisa%20Uljha%20Jiya(PagalWorld%20(mp3cut.net).mp3';
     var bgMusicControls = true; // Show UI music control
 
     // ===================== start =======================
@@ -249,9 +247,9 @@
     }
 
     // add background music
-    if (Background music) {
+    if (bgMusicURL) {
       document.getElementById('music-container').innerHTML += `
-  <audio src="${bgMusicURL}" ${bgMusicControls? 'controls': ''} autoplay loop>    
+  <audio src="${https://github.com/dawnofgod/morningstar/blob/main/Teri%20Baaton%20Mein%20Aisa%20Uljha%20Jiya(PagalWorld%20(mp3cut.net).mp3}" ${bgMusicControls? 'controls': ''} autoplay loop>  
   <p>If you are reading this, it is because your browser does not support the audio element.</p>
   </audio>
   `;
