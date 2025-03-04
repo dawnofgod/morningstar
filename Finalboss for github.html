@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Boss Ship with Homing Fireball</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { background: black; overflow: hidden; text-align: center; }
+        canvas { display: block; background: url('https://iili.io/328WJn4.jpg') no-repeat center center/cover; }
+    </style>
+</head>
+<body>
+    <canvas id="gameCanvas"></canvas>
+    <script>
+        const canvas = document.getElementById("gameCanvas");
+        const ctx = canvas.getContext("2d");
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+        let spaceshipImg = new Image();
+        let bossImg = new Image();
+        let missileImg = new Image();
+        let fireballImg = new Image();
+
+        spaceshipImg.src = 'https://iili.io/328YFmN.png';
+        bossImg.src = 'https://iili.io/32UdG3u.png';
+        missileImg.src = 'https://iili.io/32UxrQa.png';
+        fireballImg.src = 'https://iili.io/32ruant.png';
+
+        let spaceship = { x: canvas.width / 2 - 25, y: canvas.height - 100, width: 50, height: 50, velocityX: 0, velocityY: 0 };
+        let missiles = [];
+        let fireballs = [];
+        let bossShip = { x: canvas.width / 2 - 100, y: -200, width: 200, height: 200, velocityX: 3, entering: true, fireFireball: false, timePassed: 0 };
+        let keys = {};
+        let score = 0;
+
+        document.addEventListener("keydown", (e) => (keys[e.key] = true));
+        document.addEventListener("keyup", (e) => (keys[e.key] = false));
+
+        function update() {
+            if (keys["ArrowLeft"] && spaceship.x > 0) spaceship.velocityX = -8;
+            else if (keys["ArrowRight"] && spaceship.x < canvas.width - spaceship.width) spaceship.velocityX = 8;
+            else spaceship.velocityX *= 0.9;
+
+            if (keys["ArrowUp"] && spaceship.y > 0) spaceship.velocityY = -8;
+            else if (keys["ArrowDown"] && spaceship.y < canvas.height - spaceship.height) spaceship.velocityY = 8;
+            else spaceship.velocityY *= 0.9;
+
+            spaceship.x += spaceship.velocityX;
+            spaceship.y += spaceship.velocityY;
+
+            if (bossShip.entering) {
+                bossShip.y += 5;
+                if (bossShip.y >= 50) {
+                    bossShip.entering = false;
+                }
+            }
+
+            if (!bossShip.entering) {
+                bossShip.x += bossShip.velocityX;
+                if (bossShip.x <= 0 || bossShip.x >= canvas.width - bossShip.width) {
+                    bossShip.velocityX *= -1;
+                }
+            }
+
+            bossShip.timePassed += 1 / 60;
+
+            if (bossShip.timePassed <= 20) {
+                if (Math.random() > 0.95) {
+                    missiles.push({ x: bossShip.x + bossShip.width / 2 - 15, y: bossShip.y + bossShip.height, width: 30, height: 60, velocityY: 8 });
+                }
+            } else {
+                if (!bossShip.fireFireball) {
+                    bossShip.fireFireball = true;
+                    fireballs.push({ x: bossShip.x + bossShip.width / 2 - 30, y: bossShip.y + bossShip.height, width: 60, height: 60, velocityY: 5, speed: 4 });
+                }
+            }
+
+            for (let missile of missiles) {
+                missile.y += missile.velocityY;
+
+                if (
+                    spaceship.x < missile.x + missile.width &&
+                    spaceship.x + spaceship.width > missile.x &&
+                    spaceship.y < missile.y + missile.height &&
+                    spaceship.y + spaceship.height > missile.y
+                ) {
+                    alert("Game Over! Score: " + score);
+                    document.location.reload();
+                }
+
+                if (missile.y > canvas.height) missiles.splice(missiles.indexOf(missile), 1);
+            }
+
+            for (let fireball of fireballs) {
+                let angle = Math.atan2(spaceship.y - fireball.y, spaceship.x - fireball.x);
+                fireball.x += Math.cos(angle) * fireball.speed;
+                fireball.y += Math.sin(angle) * fireball.speed;
+
+                if (bossShip.timePassed > 20) {
+                    fireball.speed = 9;
+                }
+
+                if (
+                    spaceship.x < fireball.x + fireball.width &&
+                    spaceship.x + spaceship.width > fireball.x &&
+                    spaceship.y < fireball.y + fireball.height &&
+                    spaceship.y + spaceship.height > fireball.y
+                ) {
+                    alert("Game Over! Score: " + score);
+                    document.location.reload();
+                }
+
+                if (fireball.y > canvas.height || fireball.x < 0 || fireball.x > canvas.width) fireballs.splice(fireballs.indexOf(fireball), 1);
+            }
+        }
+
+        function draw() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            ctx.drawImage(spaceshipImg, spaceship.x, spaceship.y, spaceship.width, spaceship.height);
+            ctx.drawImage(bossImg, bossShip.x, bossShip.y, bossShip.width, bossShip.height);
+
+            for (let missile of missiles) {
+                ctx.drawImage(missileImg, missile.x, missile.y, missile.width, missile.height);
+            }
+
+            for (let fireball of fireballs) {
+                ctx.drawImage(fireballImg, fireball.x, fireball.y, fireball.width, fireball.height);
+            }
+
+            ctx.fillStyle = "white";
+            ctx.fillText("Score: " + score, 10, 20);
+        }
+
+        function gameLoop() {
+            update();
+            draw();
+            requestAnimationFrame(gameLoop);
+        }
+
+        gameLoop();
+    </script>
+</body>
+</html>
