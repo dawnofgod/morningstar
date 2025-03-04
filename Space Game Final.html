@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Space Loop Adventure</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { background: black; overflow: hidden; text-align: center; }
+        canvas { display: block; background: url('https://iili.io/328WJn4.jpg') repeat-y center; }
+        .timer { position: absolute; top: 10px; left: 10px; font-size: 24px; color: white; font-family: Arial, sans-serif; }
+
+        /* Futuristic button design */
+        .button {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            padding: 20px 40px;
+            font-size: 18px;
+            background-color: #1a1a1a;
+            color: white;
+            border: 2px solid #00ff00;
+            border-radius: 10px;
+            text-transform: uppercase;
+            cursor: pointer;
+            font-family: 'Courier New', Courier, monospace;
+            transition: all 0.3s ease-in-out;
+            box-shadow: 0 0 10px rgba(0, 255, 0, 0.8);
+        }
+        
+        .button:hover {
+            background-color: #00ff00;
+            color: black;
+            box-shadow: 0 0 15px rgba(0, 255, 0, 1);
+            transform: translate(-50%, -50%) scale(1.1);
+        }
+
+        .button:active {
+            transform: translate(-50%, -50%) scale(1);
+        }
+    </style>
+</head>
+<body>
+    <canvas id="gameCanvas"></canvas>
+    <div class="timer" id="timer"></div>
+
+    <!-- Futuristic button to get ready for the boss -->
+    <a href="https://dawnofgod.github.io/morningstar/Finalboss%20for%20github.html" class="button" id="bossButton" style="display: none;">
+        Get Ready for Boss
+    </a>
+
+    <script>
+        const canvas = document.getElementById("gameCanvas");
+        const ctx = canvas.getContext("2d");
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+        let spaceshipImg = new Image();
+        let asteroidImg = new Image();
+        let bossImg = new Image();
+        let guardShipImg = new Image();
+        let missileImg = new Image();
+        let bgStars = new Image();
+        
+        spaceshipImg.src = 'https://iili.io/328YFmN.png';
+        asteroidImg.src = 'https://iili.io/328agcb.png';
+        bossImg.src = 'https://iili.io/328agcb.png'; // Replace with boss image
+        guardShipImg.src = 'https://iili.io/328YFmN.png'; // Replace with guard ship image
+        missileImg.src = 'https://iili.io/328agcb.png'; // Replace with missile image
+        bgStars.src = 'https://iili.io/328WJn4.jpg';
+
+        let spaceship = { x: canvas.width / 2 - 25, y: canvas.height - 100, width: 50, height: 50, velocityX: 0, velocityY: 0 };
+        let obstacles = [];
+        let guardShips = [];
+        let missiles = [];
+        let keys = {};
+        let score = 0;
+        let imagesLoaded = 0;
+        let bossLevel = false;
+        let bossAsteroid = null;
+        let phase = 1;
+        let startTime = Date.now();
+        let bossStartTime = 120 * 1000; // Boss phase starts after 120 seconds (converted to milliseconds)
+
+        function imageLoaded() {
+            imagesLoaded++;
+            if (imagesLoaded === 5) { 
+                startGame();
+            }
+        }
+
+        spaceshipImg.onload = imageLoaded;
+        asteroidImg.onload = imageLoaded;
+        bossImg.onload = imageLoaded;
+        guardShipImg.onload = imageLoaded;
+        missileImg.onload = imageLoaded;
+        bgStars.onload = imageLoaded;
+
+        document.addEventListener("keydown", (e) => (keys[e.key] = true));
+        document.addEventListener("keyup", (e) => (keys[e.key] = false));
+
+        function createObstacle() {
+            let elapsedTime = Date.now() - startTime;
+            if (elapsedTime >= bossStartTime) {
+                return; // Do not create any more obstacles after boss arrives
+            }
+
+            if (elapsedTime >= 0 && elapsedTime < 40 * 1000) {
+                // Phase 1: Small asteroids (0 - 40 seconds)
+                let size = Math.random() * 40 + 20;
+                let x = Math.random() * (canvas.width - size);
+                obstacles.push({ x, y: -size, width: size, height: size });
+            } else if (elapsedTime >= 40 * 1000 && elapsedTime < 80 * 1000) {
+                // Phase 2: Big asteroids (40 - 80 seconds)
+                let size = Math.random() * 60 + 40;
+                let x = Math.random() * (canvas.width - size);
+                obstacles.push({ x, y: -size, width: size, height: size });
+            } else if (elapsedTime >= 80 * 1000 && elapsedTime < 120 * 1000) {
+                // Phase 3: Big asteroids & Guard ships (80 - 120 seconds)
+                // Big asteroids
+                let size = Math.random() * 60 + 40;
+                let x = Math.random() * (canvas.width - size);
+                obstacles.push({ x, y: -size, width: size, height: size });
+
+                // Guard ships
+                if (Math.random() > 0.5) {
+                    let xGuard = Math.random() * (canvas.width - 100);
+                    guardShips.push({ x: xGuard, y: -100, width: 100, height: 50, velocityX: 2, direction: 1 });
+                }
+            }
+        }
+
+        function update() {
+            let elapsedTime = Date.now() - startTime;
+
+            if (elapsedTime >= bossStartTime) {
+                phase = 4; // Boss phase starts after 120 seconds
+                document.getElementById("bossButton").style.display = "block"; // Show the boss button
+            } else if (elapsedTime >= 80 * 1000) {
+                phase = 3; // Guard ship phase starts at 80 seconds
+            } else if (elapsedTime >= 40 * 1000) {
+                phase = 2; // Big asteroid phase starts at 40 seconds
+            } else {
+                phase = 1; // Small asteroid phase (initial phase)
+            }
+
+            // Update spaceship movement
+            if (keys["ArrowLeft"] && spaceship.x > 0) spaceship.velocityX = -8;
+            else if (keys["ArrowRight"] && spaceship.x < canvas.width - spaceship.width) spaceship.velocityX = 8;
+            else spaceship.velocityX *= 0.9;
+
+            if (keys["ArrowUp"] && spaceship.y > 0) spaceship.velocityY = -8;
+            else if (keys["ArrowDown"] && spaceship.y < canvas.height - spaceship.height) spaceship.velocityY = 8;
+            else spaceship.velocityY *= 0.9;
+
+            spaceship.x += spaceship.velocityX;
+            spaceship.y += spaceship.velocityY;
+
+            // Update obstacles
+            for (let i = 0; i < obstacles.length; i++) {
+                obstacles[i].y += 6 + score / 100;
+                if (obstacles[i].y > canvas.height) {
+                    obstacles.splice(i, 1);
+                    score++;
+                }
+                if (
+                    spaceship.x < obstacles[i].x + obstacles[i].width &&
+                    spaceship.x + spaceship.width > obstacles[i].x &&
+                    spaceship.y < obstacles[i].y + obstacles[i].height &&
+                    spaceship.y + spaceship.height > obstacles[i].y
+                ) {
+                    alert("Game Over! Score: " + score);
+                    document.location.reload();
+                }
+            }
+
+            // Update Guard Ships
+            for (let guard of guardShips) {
+                guard.y += 2;
+                guard.x += guard.velocityX * guard.direction; // Use direction to reverse movement
+
+                // If the guard ship reaches the boundary, change direction
+                if (guard.x <= 0 || guard.x >= canvas.width - guard.width) {
+                    guard.direction *= -1;
+                }
+
+                if (
+                    spaceship.x < guard.x + guard.width &&
+                    spaceship.x + spaceship.width > guard.x &&
+                    spaceship.y < guard.y + guard.height &&
+                    spaceship.y + spaceship.height > guard.y
+                ) {
+                    alert("Game Over! Score: " + score);
+                    document.location.reload();
+                }
+            }
+        }
+
+        function draw() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            ctx.drawImage(bgStars, 0, 0, canvas.width, canvas.height);
+            
+            ctx.drawImage(spaceshipImg, spaceship.x, spaceship.y, spaceship.width, spaceship.height);
+            obstacles.forEach((obstacle) => ctx.drawImage(asteroidImg, obstacle.x, obstacle.y, obstacle.width, obstacle.height));
+
+            // Draw Guard Ships
+            guardShips.forEach((guard) => ctx.drawImage(guardShipImg, guard.x, guard.y, guard.width, guard.height));
+
+            ctx.fillStyle = "white";
+            ctx.fillText("Score: " + score, 10, 20);
+
+            // Timer display
+            let elapsedTime = Math.floor((Date.now() - startTime) / 1000); // Elapsed time in seconds
+            document.getElementById("timer").innerText = "Time: " + elapsedTime + "s";
+        }
+
+        function gameLoop() {
+            update();
+            draw();
+            requestAnimationFrame(gameLoop);
+        }
+
+        function startGame() {
+            setInterval(createObstacle, 600); // Adjust the spawn interval for obstacles
+            gameLoop();
+        }
+    </script>
+</body>
+</html>
