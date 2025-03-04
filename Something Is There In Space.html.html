@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Something Is There In Space</title>
+
+    <!-- Link to Google Fonts for a cinematic font -->
+    <link href="https://fonts.googleapis.com/css2?family=Russo+One&display=swap" rel="stylesheet">
+
+    <style>
+        * {
+            margin: 0px;
+            padding: 0px;
+            font-family: "Inconsolata", monospace;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: #050801;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            flex-direction: column;
+            text-align: center;
+        }
+
+        p {
+            color: #fff;
+            margin-top: 10px;
+        }
+
+        .title {
+            font-family: 'Russo One', sans-serif; /* Cinematic font */
+            color: #03e9f4;
+            font-size: 60px;
+            text-transform: uppercase;
+            letter-spacing: 4px;
+            margin-top: 20px;
+            font-weight: bold;
+            border-right: 4px solid #03e9f4;
+            white-space: nowrap;
+            overflow: hidden;
+            width: 0;
+            animation: typing 3s steps(30) 1s forwards, blink 0.75s step-end infinite;
+        }
+
+        @keyframes typing {
+            from {
+                width: 0;
+            }
+            to {
+                width: 100%;
+            }
+        }
+
+        @keyframes blink {
+            50% {
+                border-color: transparent;
+            }
+        }
+
+        .subtitle {
+            font-size: 20px;
+            color: #fff;
+            margin-top: 20px;
+        }
+
+        .btns {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            margin-top: 30px;
+        }
+
+        a {
+            position: relative;
+            display: inline-block;
+            padding: 25px 30px;
+            margin: 40px;
+            font-size: 24px;
+            text-decoration: none;
+            text-transform: uppercase;
+            letter-spacing: 4px;
+            transition: 0.5s;
+        }
+
+        .green-btn {
+            color: #00ff00;
+            border: 1.5px solid #00ff00;
+            border-radius: 7px;
+        }
+
+        .green-btn:hover {
+            background-color: #00ff00;
+            color: #050801;
+            box-shadow: 0px 0px 5px #00ff00, 0px 0px 25px #00ff00, 0px 0px 50px #00ff00, 0px 0px 100px #00ff00;
+            -webkit-box-reflect: below 1px linear-gradient(transparent, #0005);
+        }
+    </style>
+</head>
+<body>
+
+    <div class="intro-screen">
+        <div class="title">Something Is There In Space</div>
+        <div class="subtitle">Game made by Arun Poudel</div>
+
+        <div class="btns">
+            <a class="green-btn" href="https://dawnofgod.github.io/morningstar/Space%20Game%20Final.html" target="_blank">Start Game</a>
+        </div>
+    </div>
+
+</body>
+</html>
