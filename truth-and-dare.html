@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Truth & Dare Game by Arun Poudel</title>
+    <style>
+        @keyframes fadeBounce {
+            0% { opacity: 0; transform: translateY(-20px); }
+            50% { opacity: 0.5; transform: translateY(5px); }
+            100% { opacity: 1; transform: translateY(0); }
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background-color: #ff9800;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            flex-direction: column;
+            position: relative;
+        }
+
+        .intro {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .intro img {
+            width: 80%;
+            max-width: 300px;
+            margin-bottom: 10px;
+        }
+
+        .creator-name {
+            font-size: 20px;
+            font-weight: bold;
+            color: white;
+            margin-bottom: 15px;
+            animation: fadeBounce 1.5s ease-in-out;
+        }
+
+        .start-btn {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            font-size: 20px;
+            cursor: pointer;
+            border-radius: 10px;
+            transition: 0.3s;
+        }
+
+        .start-btn:hover {
+            background-color: #0056b3;
+        }
+
+        .game-container {
+            display: none;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+            max-width: 400px;
+            width: 100%;
+        }
+
+        button {
+            background-color: #e74c3c;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            margin: 10px;
+            font-size: 18px;
+            cursor: pointer;
+            border-radius: 5px;
+            width: 100%;
+        }
+
+        button:hover {
+            background-color: #c0392b;
+        }
+
+        .controls {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            display: flex;
+            gap: 10px;
+        }
+
+        .controls button {
+            background-color: #333;
+            color: white;
+            padding: 10px;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+            font-size: 14px;
+        }
+
+        .controls button:hover {
+            background-color: #555;
+        }
+
+        .pause-overlay {
+            display: none;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(255, 0, 0, 0.8);
+            color: white;
+            font-size: 24px;
+            font-weight: bold;
+            padding: 20px 40px;
+            border-radius: 10px;
+            backdrop-filter: blur(5px);
+        }
+
+        .blurred {
+            filter: blur(5px);
+        }
+    </style>
+</head>
+<body>
+    <div class="controls">
+        <button id="sound-btn" onclick="toggleMusic()">🔊</button>
+        <button id="pause-btn" onclick="toggleGame()">⏸</button>
+    </div>
+
+    <div class="pause-overlay" id="pause-overlay">PAUSED</div>
+
+    <div class="intro" id="game-content">
+        <img src="https://iili.io/3ni2SeV.png" alt="Game Logo">
+        <p class="creator-name">Created by Arun Poudel</p>
+        <button class="start-btn" onclick="startGame()">Start</button>
+    </div>
+
+    <div class="game-container" id="game">
+        <h1>Truth & Dare Game</h1>
+        <p id="question">Press a button to start!</p>
+        <button id="truth-btn" onclick="getTruth()">Truth</button>
+        <button id="dare-btn" onclick="getDare()">Dare</button>
+    </div>
+
+    <!-- Background Music -->
+    <audio id="backgroundMusic" loop>
+        <source src="https://dawnofgod.github.io/morningstar/TOD%20Game%20Music.mp3?raw=true" type="audio/mp3">
+        Your browser does not support the audio element.
+    </audio>
+
+    <script>
+        let truthIndex = 0;
+        let dareIndex = 0;
+        let gamePaused = false;
+
+        const truths = [
+            "What's the most embarrassing thing you've ever done?",
+            "Have you ever had a crush on someone in this room?",
+            "What's your biggest fear?",
+            "Have you ever lied to get out of trouble?",
+            "What’s the most childish thing you still do?",
+            "What’s your biggest regret?",
+            "Who was your first crush?",
+            "Have you ever cheated on a test?",
+            "Have you ever been caught lying?",
+            "What's the most embarrassing thing in your search history?",
+            "If you could change one thing about yourself, what would it be?",
+            "What’s the weirdest thing you’ve done in private?",
+            "What’s the worst thing you’ve ever said to someone?",
+            "Have you ever been rejected?",
+            "Have you ever had a secret relationship?",
+            "Have you ever stalked someone on social media?",
+            "If you had to marry someone in this room, who would it be?",
+            "Have you ever sent a text to the wrong person?",
+            "What’s your most embarrassing childhood memory?",
+            "Have you ever been in love?",
+            "Have you ever been caught talking to yourself?",
+            "Have you ever had a crush on a teacher?",
+            "If you could erase one past memory, what would it be?",
+            "Have you ever had an imaginary friend?",
+            "What’s the dumbest thing you’ve done for love?",
+            "Have you ever spread a rumor about someone?",
+            "If you could switch lives with someone for a day, who would it be?",
+            "Have you ever been in a physical fight?",
+            "Have you ever laughed at a really bad moment?",
+            "What’s the most embarrassing thing your parents caught you doing?",
+            "Have you ever had a crush on a friend’s partner?",
+            "Have you ever ghosted someone?",
+            "What’s the worst decision you’ve ever made?"
+        ];
+
+        const dares = [
+            "Sing the chorus of your favorite song.",
+            "Do 10 push-ups.",
+            "Send a random emoji to your last text contact.",
+            "Let the person next to you post something on your social media.",
+            "Call a friend and sing them a song.",
+            "Do a funny impression of someone in the room.",
+            "Try to sell someone an invisible product.",
+            "Whisper everything for the next three rounds.",
+            "Share the last photo on your phone.",
+            "Do your best moonwalk.",
+            "Take a selfie making the weirdest face possible.",
+            "Text your crush 'I have something to tell you… 😳' and don’t explain.",
+            "Let someone change your phone’s wallpaper to whatever they choose.",
+            "Choose someone from the group to decide a new nickname for you and use it for the rest of the life.",
+            "Call the first contact in your phone and sing 'Happy Birthday' to them.",
+            "Let someone redo your hairstyle.",
+            "Let someone send a message to any of your contacts.",
+            "Take a silly group photo and post it on social media.",
+            "Walk around like a zombie until your next turn.",
+            "Pretend to be a waiter and take fake orders from everyone.",
+            "Talk in slow motion for the next three rounds.",
+            "Balance a book on your head for one minute.",
+            "Do a TikTok trend chosen by the group.",
+            "Do an impression of a teacher you had in school.",
+            "Let the group give you a new Instagram bio.",
+            "Pretend you are a news reporter and deliver a breaking news story.",
+            "Act like your favorite movie character for a full minute.",
+            "Show the most embarrassing photo on your phone.",
+            "Make up a song about the person on your right and sing it.",
+            "Make a funny meme using your own face and share it.",
+            "Take a sip of water and gargle a song for others to guess.",
+            "Let someone make a TikTok video using your phone.",
+            "Let the group choose an emoji that you have to use in all your texts for the next 10 minutes.",
+            "Pretend you are a superhero and describe your powers.",
+            "Try to make the whole group laugh in 30 seconds.",
+            "Walk up to a random stranger (if playing in public) and compliment them.",
+            "Speak in rhymes for the next two rounds.",
+            "Act out a famous movie scene until someone guesses it.",
+            "Act like a statue for one full minute.",
+            "Make up a funny story on the spot and tell it.",
+            "Let the group pick a random contact from your phone and you must call them, saying only 'I know your secret' and then hang up.",
+            "Start singing the theme song of a popular cartoon.",
+            "Say, 'Excuse me, can I borrow a pencil?' to every person in the room until someone gives you one."
+        ];
+
+        function startGame() {
+            document.querySelector(".intro").style.display = "none";
+            document.getElementById("game").style.display = "block";
+            let music = document.getElementById("backgroundMusic");
+            music.play().catch(error => console.log("Autoplay blocked, user must interact with the page."));
+        }
+
+        function toggleMusic() {
+            let music = document.getElementById("backgroundMusic");
+            let soundBtn = document.getElementById("sound-btn");
+            if (music.paused) {
+                music.play();
+                soundBtn.textContent = "🔊";
+            } else {
+                music.pause();
+                soundBtn.textContent = "🔇";
+            }
+        }
+
+        function toggleGame() {
+            gamePaused = !gamePaused;
+            let pauseBtn = document.getElementById("pause-btn");
+            let pauseOverlay = document.getElementById("pause-overlay");
+            let gameContent = document.getElementById("game-content");
+            pauseBtn.textContent = gamePaused ? "▶" : "⏸";
+            pauseOverlay.style.display = gamePaused ? "block" : "none";
+            gameContent.classList.toggle("blurred", gamePaused);
+
+            // Disable or enable buttons based on game state
+            document.getElementById("truth-btn").disabled = gamePaused;
+            document.getElementById("dare-btn").disabled = gamePaused;
+        }
+
+        function getTruth() {
+            if (gamePaused) return;  // Do nothing if game is paused
+            truthIndex = (truthIndex + 1) % truths.length;
+            document.getElementById("question").textContent = truths[truthIndex];
+        }
+
+        function getDare() {
+            if (gamePaused) return;  // Do nothing if game is paused
+            dareIndex = (dareIndex + 1) % dares.length;
+            document.getElementById("question").textContent = dares[dareIndex];
+        }
+    </script>
+</body>
+</html>
