@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Guess the Actor by Picture 🎭</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #0d0d1a;
+      color: #fff;
+      text-align: center;
+      padding: 2rem;
+    }
+
+    .game-container {
+      background-color: #1c1c2b;
+      padding: 2rem;
+      border-radius: 1rem;
+      max-width: 500px;
+      margin: auto;
+      box-shadow: 0 0 15px rgba(0,0,0,0.3);
+    }
+
+    h1 {
+      color: #00d9ff;
+    }
+
+    .actor-img {
+      width: 100%;
+      max-width: 300px;
+      height: auto;
+      border-radius: 1rem;
+      margin-bottom: 1rem;
+      box-shadow: 0 0 10px rgba(255,255,255,0.2);
+    }
+
+    input {
+      padding: 0.5rem 1rem;
+      border: none;
+      border-radius: 0.5rem;
+      font-size: 1rem;
+      width: 70%;
+      margin-bottom: 1rem;
+    }
+
+    button {
+      padding: 0.5rem 1.5rem;
+      font-size: 1rem;
+      border: none;
+      border-radius: 0.5rem;
+      background-color: #ff4081;
+      color: white;
+      cursor: pointer;
+      margin-left: 0.5rem;
+    }
+
+    #feedback {
+      margin-top: 1rem;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="game-container">
+    <h1>🎭 Guess the Actor</h1>
+    <img id="actorImage" class="actor-img" src="" alt="Actor" />
+    <input type="text" id="guess" placeholder="Type actor name..." />
+    <button onclick="checkActor()">Submit</button>
+    <div id="feedback"></div>
+    <p id="score">Score: 0</p>
+  </div>
+
+  <script>
+    const actors = [
+      {
+        name: "shah rukh khan",
+        img: "https://iili.io/3ElxK0v.jpg"
+      },
+      {
+        name: "Hritik Roshan",
+        img: "https://iili.io/3Elx2sa.jpg"
+      },
+      {
+        name: "Aamir Khan",
+        img: "https://iili.io/3ElxdWg.jpg"
+      },
+      {
+        name: "Ranbir kapoor",
+        img: "https://iili.io/3ElAfAQ.jpg"
+      },
+      {
+        name: "Salman Khan",
+        img: "https://iili.io/3El5jM7.jpg"},
+      {
+        name: "RDJ",
+        img: "https://iili.io/3ElhmMu.jpg"},
+       {
+        name: "Tom Cruise",
+        img: "https://iili.io/3Elj9Fj.jpg"},
+     {
+       name: "Johnny Depp",
+        img: "https://iili.io/3Elhp6b.jpg"},
+          {
+            name: "Leonardo dicaprio",
+        img: "https://iili.io/3Elhbne.jpg"},
+         {
+           name: "Andrew garfield",
+        img: "https://iili.io/3Elhtt9.gif"},
+          
+    ];
+
+    let current = 0;
+    let score = 0;
+
+    function loadActor() {
+      document.getElementById("actorImage").src = actors[current].img;
+    }
+
+    function checkActor() {
+      const userGuess = document.getElementById("guess").value.trim().toLowerCase();
+      const correctName = actors[current].name.toLowerCase();
+
+      if (userGuess === correctName) {
+        score++;
+        document.getElementById("feedback").innerText = "✅ Correct!";
+      } else {
+        document.getElementById("feedback").innerText = `❌ Wrong! It was "${actors[current].name}"`;
+      }
+
+      current++;
+      document.getElementById("score").innerText = `Score: ${score}`;
+      document.getElementById("guess").value = "";
+
+      if (current < actors.length) {
+        loadActor();
+      } else {
+        document.getElementById("actorImage").style.display = "none";
+        document.getElementById("feedback").innerText += ` Final Score: ${score}/${actors.length}`;
+        document.querySelector("input").style.display = "none";
+        document.querySelector("button").style.display = "none";
+      }
+    }
+
+    window.onload = loadActor;
+  </script>
+
+</body>
+</html>
