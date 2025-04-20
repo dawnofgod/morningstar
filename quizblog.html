@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Guess the Movie by Emoji 🎬</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #1e1e2f;
+      color: #fff;
+      text-align: center;
+      padding: 2rem;
+    }
+
+    .game-container {
+      background-color: #2e2e40;
+      padding: 2rem;
+      border-radius: 1rem;
+      max-width: 500px;
+      margin: auto;
+      box-shadow: 0 0 15px rgba(0,0,0,0.3);
+    }
+
+    h1 {
+      color: #ffd700;
+    }
+
+    .emoji {
+      font-size: 2.5rem;
+      margin-bottom: 1rem;
+    }
+
+    input {
+      padding: 0.5rem 1rem;
+      border: none;
+      border-radius: 0.5rem;
+      font-size: 1rem;
+      width: 70%;
+      margin-bottom: 1rem;
+    }
+
+    button {
+      padding: 0.5rem 1.5rem;
+      font-size: 1rem;
+      border: none;
+      border-radius: 0.5rem;
+      background-color: #ff4081;
+      color: white;
+      cursor: pointer;
+      margin-left: 0.5rem;
+    }
+
+    #feedback {
+      margin-top: 1rem;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="game-container">
+    <h1>🎬 Guess the Movie by Emoji</h1>
+    <div class="emoji" id="emoji">🧊🚢❤️🌊</div>
+    <input type="text" id="guess" placeholder="Type movie name..." />
+    <button onclick="checkAnswer()">Submit</button>
+    <div id="feedback"></div>
+    <p id="score">Score: 0</p>
+  </div>
+
+  <script>
+    const questions = [
+      { emoji: "🧊🚢❤️🌊", answer: "Titanic" },
+      { emoji: "🦇🎭🃏", answer: "The Dark Knight" },
+      { emoji: "🧙‍♂️💍🔥", answer: "Lord of the Rings" },
+      { emoji: "🚀👨‍🚀🌌", answer: "Interstellar" },
+      { emoji: "❤️💓✌️", answer: "Dil Dhadakne Do" },
+      { emoji: "🤘⭐", answer: "Rockstar" },
+      { emoji: "✌️-✌️", answer: "Zero" },
+    { emoji: "🪷❌🔥", answer: "Pushpa" },
+    { emoji: "🏏🙍‍♂️", answer: "MS Dhoni" }
+    
+    ];
+
+    let current = 0;
+    let score = 0;
+
+    function checkAnswer() {
+      const userGuess = document.getElementById("guess").value.trim().toLowerCase();
+      const correctAnswer = questions[current].answer.toLowerCase();
+
+      if (userGuess === correctAnswer) {
+        score++;
+        document.getElementById("feedback").innerText = "✅ Correct!";
+      } else {
+        document.getElementById("feedback").innerText = `❌ Wrong! It was "${questions[current].answer}"`;
+      }
+
+      current++;
+      document.getElementById("score").innerText = `Score: ${score}`;
+      document.getElementById("guess").value = "";
+
+      if (current < questions.length) {
+        document.getElementById("emoji").innerText = questions[current].emoji;
+      } else {
+        document.getElementById("emoji").innerText = "🎉 Game Over!";
+        document.getElementById("feedback").innerText += ` Final Score: ${score}/${questions.length}`;
+        document.querySelector("input").style.display = "none";
+        document.querySelector("button").style.display = "none";
+      }
+    }
+  </script>
+
+</body>
+</html>
