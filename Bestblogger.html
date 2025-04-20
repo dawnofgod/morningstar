@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Funny Interaction</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background: linear-gradient(rgb(117, 117, 117), rgb(45, 56, 67));
+            overflow: hidden;
+            flex-direction: column;
+        }
+
+        .container, .funnyTextPage {
+            text-align: center;
+        }
+
+        .funnyTextPage {
+            display: none; /* Initially hidden */
+        }
+
+        .funnyTextPage h1 {
+            font-size: 50px;
+            color: white;
+        }
+
+        .funnyText {
+            font-size: 3rem;
+            color: white;
+            animation: bounce 1s infinite alternate ease-in-out;
+        }
+
+        #noButton {
+            position: absolute;
+            margin-left: 150px;
+            transition: 0.5s;
+            margin-top: 30px;
+        }
+
+        #yesButton {
+            position: absolute;
+            margin-right: 150px;
+            margin-top: 30px;
+        }
+
+        .header_text {
+            font-family: "Nunito";
+            font-size: 50px;
+            font-weight: bold;
+            text-align: center;
+            color: bisque;
+        }
+
+        .btn {
+            background-color: #017cff;
+            color: white;
+            font-weight: 600;
+            padding: 15px 32px;
+            text-align: center;
+            font-size: 16px;
+            border: none;
+            border-radius: 12px;
+            transition: background-color 0.3s ease;
+            box-shadow: 0 3px 3px black;
+            cursor: pointer;
+        }
+
+        .btn:hover {
+            background-color: white;
+            color: #017cff;
+        }
+
+        .gif_container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-top: 20px;
+        }
+
+        .gif_container img {
+            max-width: 300px;
+            border-radius: 10px;
+        }
+
+        @keyframes bounce {
+            0% { transform: translateY(0); }
+            100% { transform: translateY(-20px); }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Funny Question Page -->
+    <div class="container" id="questionPage">
+        <h1 class="header_text">So… do you think you’re the best blogger?😏
+<h1>
+        
+        <div class="gif_container">
+            <img src="https://iili.io/33FCwTx.gif" alt="Funny GIF">
+        </div>
+
+        <div class="buttons">
+            <button class="btn" id="yesButton" onclick="showFunnyText()" style="background-color: red; color: black;">No</button>
+            <button class="btn" id="noButton" onmouseover="moveButton()" onclick="moveButton()" style="background-color: greenyellow; color: black;">Yes</button>
+        </div>
+    </div>
+
+    <!-- Funny Animated Text Page -->
+    <div class="funnyTextPage" id="funnyTextPage">
+        
+        
+        <div class="gif_container">
+            <img src="https://iili.io/33FBZdu.gif" alt="Second Funny GIF">
+        </div>
+
+        <div class="funnyText">I know you're not... that's why I asked!🤣</div>
+    </div>
+
+    <script>
+        function showFunnyText() {
+            document.getElementById("questionPage").style.display = "none"; // Hide first page
+            document.getElementById("funnyTextPage").style.display = "block"; // Show funny text page
+        }
+
+        function moveButton() {
+            var x = Math.random() * (window.innerWidth - document.getElementById("noButton").offsetWidth);
+            var y = Math.random() * (window.innerHeight - document.getElementById("noButton").offsetHeight);
+            document.getElementById("noButton").style.left = `${x}px`;
+            document.getElementById("noButton").style.top = `${y}px`;
+        }
+    </script>
+
+</body>
+</html>
